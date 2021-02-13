@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 //===============================================================================================
 
@@ -10,7 +11,7 @@
 #define CANARY 0xDABADEDABADADABA
 #define CANARY1 0xBBAADDDDEEAADDFF
 
-typedef int type_of_stack;
+typedef double type_of_stack;
 
 typedef struct
 {
@@ -24,19 +25,17 @@ typedef struct
 
 enum Stack_error
 {
-    no_errors,
-    stack_nullptr,
-    bad_size,
-    no_free_memory,
-    stack_is_empty,
-    stack_canary_left_in_danger,
-    stack_canary_right_in_danger,
-    data_canary_left_in_danger,
-    data_canary_right_in_danger,
-    hash_error,
+    no_errors                       = 0,
+    stack_nullptr                   = 1,
+    bad_size                        = 2,
+    no_free_memory                  = 3,
+    stack_is_empty                  = 4,
+    stack_canary_left_in_danger     = 5,
+    stack_canary_right_in_danger    = 6,
+    data_canary_left_in_danger      = 7,
+    data_canary_right_in_danger     = 8,
+    hash_error                      = 9,
 };
-
-const type_of_stack poison = 0xBADDEAD;
 
 //===============================================================================================
 
