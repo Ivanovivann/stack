@@ -24,7 +24,7 @@ void* poison_realloc (Stack* stack, unsigned prev_capacity, unsigned capacity)
     return (void *)(&(((char*)(stack->data))[sizeof(CANARY1)]));
 }
 
-Stack_error construct_stack (Stack* stack)
+enum Stack_error construct_stack (Stack* stack)
 {
     stack->canary1 = CANARY;
     stack->canary2 = CANARY;
@@ -37,15 +37,15 @@ Stack_error construct_stack (Stack* stack)
     return verificator (stack);
 }
 
-Stack_error verificator (Stack* stack)
+enum Stack_error verificator (Stack* stack)
 {
-    if (stack == nullptr) {
+    if (stack == NULL) {
         return stack_nullptr;
     }
     if (stack->size >= stack->capacity || (stack->size > 0 && ((type_of_stack *)(stack->data))[stack->size - 1] != ((type_of_stack *)(stack->data))[stack->size - 1])) {
         return bad_size;
     }
-    if (stack->data == nullptr) {
+    if (stack->data == NULL) {
         return no_free_memory;
     }
     if (stack->size < 0) {
@@ -78,14 +78,14 @@ void destruct_stack (Stack* stack)
     }
 
     free ((char *) stack->data - sizeof (CANARY1));
-    stack->data = nullptr;
+    stack->data = NULL;
     stack->size = 0;
     stack->capacity = 0;
     stack->canary1 = 0;
     stack->canary2 = 0;
 }
 
-Stack_error push_stack (Stack* stack, type_of_stack value)
+enum Stack_error push_stack (Stack* stack, type_of_stack value)
 {
     int error = verificator(stack);
     if (error) {
@@ -106,7 +106,7 @@ Stack_error push_stack (Stack* stack, type_of_stack value)
     return verificator(stack);
 }
 
-Stack_error pop_stack (Stack* stack, type_of_stack* value)
+enum Stack_error pop_stack (Stack* stack, type_of_stack* value)
 {
     int error = verificator(stack);
     if (error) {
