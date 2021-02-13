@@ -4,7 +4,7 @@ void fill_poison (Stack* stack, unsigned prev_capacity)
 {
     for (unsigned i = prev_capacity + sizeof(CANARY1) / sizeof(type_of_stack); i < stack->capacity + sizeof(CANARY1) / sizeof(type_of_stack); i++)
     {
-        ((type_of_stack*)(stack->data))[i] = poison;
+        ((type_of_stack*)(stack->data))[i] = NAN;
     }
     ((unsigned long long *)(stack->data))[1 + stack->capacity / (sizeof(CANARY1) / sizeof(type_of_stack))] = CANARY1;
 }
@@ -42,7 +42,7 @@ Stack_error verificator (Stack* stack)
     if (stack == nullptr) {
         return stack_nullptr;
     }
-    if (stack->size >= stack->capacity || (stack->size > 0 && ((type_of_stack *)(stack->data))[stack->size - 1] == poison)) {
+    if (stack->size >= stack->capacity || (stack->size > 0 && ((type_of_stack *)(stack->data))[stack->size - 1] != ((type_of_stack *)(stack->data))[stack->size - 1])) {
         return bad_size;
     }
     if (stack->data == nullptr) {
@@ -60,7 +60,7 @@ Stack_error verificator (Stack* stack)
     if (((unsigned long long *)(stack->data))[-1] != CANARY1) {
         return data_canary_left_in_danger;
     }
-    if (((unsigned long long *)(stack->data))[stack->capacity / 2] != CANARY1) {
+    if (((unsigned long long *)(stack->data))[stack->capacity / (sizeof(CANARY1) / sizeof(type_of_stack))] != CANARY1) {
         return data_canary_right_in_danger;
     }
     if (stack->hash != make_hash (stack)) {
@@ -116,7 +116,7 @@ Stack_error pop_stack (Stack* stack, type_of_stack* value)
     --(stack->size);
     *value = ((type_of_stack *)(stack->data))[stack->size];
 
-    ((type_of_stack *)(stack->data))[stack->size] = poison;
+    ((type_of_stack *)(stack->data))[stack->size] = NAN;
 
     if (stack->size * 2 < stack->capacity && stack->capacity > BEGIN_CAPACITY) {
         unsigned prev_capacity = stack->capacity;
@@ -135,7 +135,7 @@ void dump_stack (Stack* stack)
         printf("Stack is BAD error - %d\n", error);
     }
     else{
-        printf("Stack is good [%p]\n{\n", stack);
+        printf("Stack is good [%p] {\n", stack);
     }
     printf("\tstack left canary = %llX\n", stack->canary1);
     printf("\tcapacity = %u\n", stack->capacity);
@@ -145,15 +145,15 @@ void dump_stack (Stack* stack)
     printf("\t\tdata left canary = %llX\n", ((unsigned long long *)(stack->data))[-1]);
     for (int i = 0; i < stack->capacity; i++)
     {
-        if (((type_of_stack *)(stack->data))[i] == poison) {
-            printf("\t\tElement [%d] - %X (POISON)\n", i, ((type_of_stack *)(stack->data))[i]);
+        if (((type_of_stack *)(stack->data))[i] != ((type_of_stack *)(stack->data))[i]) {
+            printf("\t\tElement [%d] - %lG (POISON)\n", i, ((type_of_stack *)(stack->data))[i]);
         }
         else {
-            printf("\t\tElement [%d] - %d\n", i, ((type_of_stack *)(stack->data))[i]);
+            printf("\t\tElement [%d] - %lg\n", i, ((type_of_stack *)(stack->data))[i]);
         }
 
     }
-    printf("\t\tdata right canary = %llX\n", ((unsigned long long *)(stack->data))[stack->capacity / 2]);
+    printf("\t\tdata right canary = %llX\n", ((unsigned long long *)(stack->data))[stack->capacity / (sizeof(CANARY1) / sizeof(type_of_stack))]);
     printf("}\n");
 }
 
