@@ -135,7 +135,7 @@ void dump_stack (Stack* stack)
         printf("Stack is BAD error - %d\n", error);
     }
     else{
-        printf("Stack is good [%p] {\n", stack);
+        printf("Stack is good [%p]\n{\n", stack);
     }
     printf("\tstack left canary = %llX\n", stack->canary1);
     printf("\tcapacity = %u\n", stack->capacity);
