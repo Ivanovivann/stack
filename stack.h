@@ -43,13 +43,13 @@ void fill_poison (Stack* stack, unsigned prev_capacity);
 
 void* poison_realloc (Stack* stack, unsigned prev_capacity, unsigned capacity);
 
-Stack_error construct_stack (Stack* stack);
+enum Stack_error construct_stack (Stack* stack);
 
-Stack_error verificator (Stack* stack);
+enum Stack_error verificator (Stack* stack);
 
-Stack_error push_stack (Stack* stack, type_of_stack value);
+enum Stack_error push_stack (Stack* stack, type_of_stack value);
 
-Stack_error pop_stack (Stack* stack, type_of_stack* value);
+enum Stack_error pop_stack (Stack* stack, type_of_stack* value);
 
 void dump_stack (Stack* stack);
 
